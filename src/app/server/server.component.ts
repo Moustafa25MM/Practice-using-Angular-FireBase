@@ -4,4 +4,6 @@ import { Component } from "@angular/core";
   selector:'server-app',
   templateUrl:'./server.component.html'
 })
-export class ServerComponent{}
+export class ServerComponent{
+  title:string = 'This is my new Server';
+}
