@@ -19,6 +19,7 @@ interface ResponseData {
 })
 export class AppComponent implements OnInit {
   loadedPosts : Post[] = [];
+  isFetching = false;
 
   constructor(private http: HttpClient) {}
 
@@ -41,6 +42,7 @@ export class AppComponent implements OnInit {
     // Send Http request
   }
   private fetchPosts(){
+    this.isFetching = true;
     this.http.get<ResponseData>('https://angular-guide-6a6a7-default-rtdb.firebaseio.com/posts.json')
     .pipe(map((responseData)=>{
         const arrayPosts =[];
@@ -50,7 +52,8 @@ export class AppComponent implements OnInit {
         return arrayPosts;
     }))
     .subscribe((posts)=>{
-      console.log(posts)
+      console.log(posts);
+      this.isFetching = false;
       this.loadedPosts = posts;
     })
   }
