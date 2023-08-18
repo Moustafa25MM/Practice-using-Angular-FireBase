@@ -1,16 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
+import { Post } from './Post.module';
+import { PostsService } from './posts.service';
 
-interface Post {
-  content:string,
-  title:string,
-  id?:string
-}
 
-interface ResponseData {
-  [key: string]: Post;
-}
+
 
 @Component({
   selector: 'app-root',
@@ -21,40 +16,33 @@ export class AppComponent implements OnInit {
   loadedPosts : Post[] = [];
   isFetching = false;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private postsService : PostsService) {}
 
   ngOnInit() {
-    this.fetchPosts();
+    this.isFetching = true;
+    this.postsService.fetchPosts().subscribe((posts:Post[])=>{
+      this.loadedPosts = posts;
+      this.isFetching = false;
+    });
   }
 
   onCreatePost(postData: { title: string; content: string }) {
-    this.http.post('https://angular-guide-6a6a7-default-rtdb.firebaseio.com/posts.json',postData).subscribe((responseData)=>{
-      console.log(responseData);
-    })
+      this.postsService.createAndStrorePosts(postData.title,postData.content);
   }
 
   onFetchPosts() {
     // Send Http request
-    this.fetchPosts();
+    this.isFetching = true;
+    this.postsService.fetchPosts().subscribe((posts:Post[])=>{
+      this.loadedPosts = posts;
+      this.isFetching = false;
+    });
   }
 
   onClearPosts() {
-    // Send Http request
+    this.postsService.deletePosts().subscribe();
   }
   private fetchPosts(){
-    this.isFetching = true;
-    this.http.get<ResponseData>('https://angular-guide-6a6a7-default-rtdb.firebaseio.com/posts.json')
-    .pipe(map((responseData)=>{
-        const arrayPosts =[];
-        for (const key in responseData){
-            arrayPosts.push({id:key , ...responseData[key]});
-        }
-        return arrayPosts;
-    }))
-    .subscribe((posts)=>{
-      console.log(posts);
-      this.isFetching = false;
-      this.loadedPosts = posts;
-    })
+
   }
 }
