@@ -39,7 +39,6 @@ export class AuthComponent {
       console.log(errorRes);
       this.error = errorRes;
       this.isLoading = false;
-
   })
 
     form.reset();
