@@ -46,9 +46,9 @@ export class AuthService {
         }
         console.log(errorRes);
         switch(errorRes.error.error.message){
-          case 'INVALID_PASSWORD' : errorMessage ='ivalid Password'
+          case 'INVALID_PASSWORD' : errorMessage ='invalid Password'
           break
-          case 'EMAIL_NOT_FOUND': errorMessage = 'email not found'
+          case 'EMAIL_NOT_FOUND': errorMessage = 'Email not found'
         }
         return throwError(errorMessage);
       }))
